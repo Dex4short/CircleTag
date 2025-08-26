@@ -159,12 +159,13 @@ public class CircleTag {
 		calculateMarkerID();
 		return id;
 	}
-	public boolean isMarkerValid() {		
-		for (int c1 = 0; c1 < circles.size(); c1++) {
+	private int c1,c2;
+	public boolean isMarkerValid() {
+		for (c1 = 0; c1 < circles.size(); c1++) {
 			if(!circles.get(c1).isInsideCircleTag(getTagSize())) 
 				return false;
 			
-			for (int c2 = c1 + 1; c2 < circles.size(); c2++) {
+			for (c2 = c1 + 1; c2 < circles.size(); c2++) {
 				if (circles.get(c1).intersects(circles.get(c2))) {
 					return false;
 				}
@@ -172,6 +173,4 @@ public class CircleTag {
 		}
 		return true;
 	}
-
-	
 }

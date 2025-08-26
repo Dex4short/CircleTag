@@ -22,7 +22,7 @@ public class CircleMark {
 	}
 	@Override
 	public String toString() {
-		return getOrbit() + "" + getCardinalDirection() + "" + getDiscreteSize() + "" + getPolarity().sym;
+		return getOrbit() + "" + getCardinalDirection() + "" + getPolarity().sym + "" + getDiscreteSize();
 	}
 	
 	//setters
@@ -111,10 +111,8 @@ public class CircleMark {
 	}
 	boolean isInsideCircleTag(double tag_size) {
 	    return 
-	    	((this.getX() - getRadius() >= 0) && (this.getX() + getRadius() <= tag_size))
+	    	((this.getX() - getRadius() >= 1) && (this.getX() + getRadius() <= tag_size-2))
 	    	&&
-	    	((this.getY() - getRadius() >= 0) && (this.getY() + getRadius() <= tag_size));
-	 }
-
-	
+	    	((this.getY() - getRadius() >= 1) && (this.getY() + getRadius() <= tag_size-2));
+	 }	
 }
