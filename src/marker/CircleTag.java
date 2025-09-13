@@ -17,7 +17,7 @@ public class CircleTag {
 	private BasicStroke stroke;
 	
 	public CircleTag() {
-		body_size = 101;
+		body_size = 100;
 		margine = 10;
 		
 		isOrbitsVisible = false;
@@ -168,7 +168,13 @@ public class CircleTag {
 	}
 	
 	public int getTagSize() {
-		return (getBodySize() + (getMargine() * 2));
+		int tagSize = (getBodySize() + (getMargine() * 2));
+		
+		if(tagSize%2 == 0) {
+			return tagSize + 1;
+		}
+		
+		return tagSize;
 	}
 	
 	public int getOrbits() {
