@@ -17,7 +17,7 @@ public class CircleTag {
 	private BasicStroke stroke;
 	
 	public CircleTag() {
-		body_size = 100;
+		body_size = 101;
 		margine = 10;
 		
 		isOrbitsVisible = false;
@@ -52,6 +52,7 @@ public class CircleTag {
 		
 		g2d.translate(-x, -y);
 	}
+	
 	protected void drawOrbits(Graphics2D g2d) {
 		o_gap = Math.round(body_size/(orbits*2));
 		o_size = 0;
@@ -69,9 +70,11 @@ public class CircleTag {
 		}
 		g2d.translate(-tp,-tp);
 	}
+	
 	protected void drawMarkerBody(Graphics2D g2d) {
 		g2d.drawRect(getMargine(), getMargine(), getBodySize(), getBodySize());
 	}
+	
 	protected void drawCircleMark(Graphics2D g2d, CircleMark circle_mark) {
 		circle_mark.drawCircleMark(g2d);
 	}
@@ -81,45 +84,63 @@ public class CircleTag {
 		circles.add(circle_mark);
 		circle_mark.setParent(this);
 	}
+	
 	public void removeCircleMark(CircleMark circle_mark) {
 		circles.remove(circle_mark);
 		circle_mark.setParent(null);
 	}
+	
 	public CircleMark getCircleMark(int index) {
 		return circles.get(index);
 	}
+	
 	public CircleMark[] getCircleMarks() {
 		return circles.toArray(new CircleMark[circles.size()]);
 	}
+	
 	public ArrayList<CircleMark> getCircleMarkList() {
 		return circles;
 	}
+	
 	public int getCircleMarksCount() {
 		return circles.size();
 	}
+	
 	public void setCircleMarks(CircleMark circle_marks[]) {
 		circles.clear();
 		for(CircleMark cm: circle_marks) {
 			addCircleMark(cm);
 		}
 	}
+	
 	public void clearCircleMarks() {
 		circles.clear();
 	}
+	
 	public void forEachCircle(Consumer<CircleMark> c) {
 		circles.forEach(c);
+	}
+	
+	public void copyCircleMarks(CircleTag circleTag) {
+		clearCircleMarks();
+		for(CircleMark c: circleTag.getCircleMarks()) {
+			addCircleMark(new CircleMark(c.getOrbit(), c.getCardinalDirection(), c.getDiscreteSize(), c.getPolarity()));
+		}
 	}
 	
 	//tag feature visibility
 	public void setOrbitsVisible(boolean isOrbitsVisible) {
 		this.isOrbitsVisible = isOrbitsVisible;
 	}
+	
 	public boolean isOrbitsVisible() {
 		return isOrbitsVisible;
 	}
+	
 	public void setMarkerBodyVisible(boolean isMarkerBodyVisible) {
 		this.isMarkerBodyVisible = isMarkerBodyVisible;
 	}
+	
 	public boolean isMarkerBodyVisible() {
 		return isMarkerBodyVisible;
 	}
@@ -129,21 +150,27 @@ public class CircleTag {
 		this.scale = scale;
 		stroke = new BasicStroke(scale);
 	}
+	
 	public float getScale() {
 		return scale;
 	}
+	
 	public void setMargine(int margine) {
 		this.margine = margine;
 	}
+	
 	public int getMargine() {
 		return Math.round(margine * scale);
 	}
+	
 	public int getBodySize() {
 		return Math.round(body_size * scale);
 	}
+	
 	public int getTagSize() {
 		return (getBodySize() + (getMargine() * 2));
 	}
+	
 	public int getOrbits() {
 		return orbits;
 	}
@@ -155,10 +182,12 @@ public class CircleTag {
 			id += c.getValue();
 		});
 	}
+	
 	public int getMarkerId() {
 		calculateMarkerID();
 		return id;
 	}
+	
 	private int c1,c2;
 	public boolean isMarkerValid() {
 		for (c1 = 0; c1 < circles.size(); c1++) {
@@ -173,4 +202,5 @@ public class CircleTag {
 		}
 		return true;
 	}
+	
 }

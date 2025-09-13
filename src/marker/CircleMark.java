@@ -91,28 +91,28 @@ public class CircleMark {
 		return (parent.getTagSize()/2) + Math.round((int)(Math.sin(getCardinalDirection().rad) * getDisplacement()));
 	}
 	public int getRadius() {
-		return Math.round(getDiscreteSize().size * parent.getScale() / 2);
+		return Math.round(getDiameter() / 2f);
 	}
 	public int getDiameter() {
-		return Math.round(getDiscreteSize().size * parent.getScale());
+		return Math.round((getDiscreteSize().size * parent.getScale()));
 	}
 	public int getDisplacement() {
-		return Math.round(parent.getBodySize() / (parent.getOrbits()*2) * getOrbit());
+		return Math.round(parent.getBodySize() / (parent.getOrbits() * 2f) * getOrbit());
 	}
 	public Point getPoint() {
 		return new Point(getX(), getY());
 	}
 	boolean intersects(CircleMark circle_mark) {
-	    double dx = getX() - circle_mark.getX();
-	    double dy = getY() - circle_mark.getY();
-	    double distance = Math.sqrt(dx * dx + dy * dy);
+	    int dx = getX() - circle_mark.getX();
+	    int dy = getY() - circle_mark.getY();
+	    int distance = (int)Math.round(Math.sqrt((dx * dx) + (dy * dy)));
 	    
-	    return distance <= (getRadius() + circle_mark.getRadius());
+	    return distance <= ((getRadius() + circle_mark.getRadius()));
 	}
 	boolean isInsideCircleTag(double tag_size) {
 	    return 
-	    	((this.getX() - getRadius() >= 1) && (this.getX() + getRadius() <= tag_size-2))
+	    	(((this.getX() - getRadius()) >= 1) && ((this.getX() + getRadius()) <= (tag_size-2)))
 	    	&&
-	    	((this.getY() - getRadius() >= 1) && (this.getY() + getRadius() <= tag_size-2));
+	    	(((this.getY() - getRadius()) >= 1) && ((this.getY() + getRadius()) <= (tag_size-2)));
 	 }	
 }

@@ -8,4 +8,5 @@ public enum DiscreteSize {
 		this.base_value = value;
 		size = (ordinal()+1) * 10;
 	}
+	
 }
