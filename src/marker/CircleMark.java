@@ -10,9 +10,10 @@ import marker.enums.Polarity;
 public class CircleMark {
 	private int orbit, value;
 	private DiscreteSize discrete_size;
-	private Polarity polarity;
 	private CardinalDirection direction;
+	private Polarity polarity;
 	private CircleTag parent;
+	boolean isMarkerChanged;
 	
 	public CircleMark(int orbit, CardinalDirection direction, DiscreteSize discrete_size,  Polarity polarity) {
 		setOrbit(orbit);
@@ -20,46 +21,61 @@ public class CircleMark {
 		setDiscreteSize(discrete_size);
 		setPolarity(polarity);
 	}
+	
 	@Override
 	public String toString() {
-		return getOrbit() + "" + getCardinalDirection() + "" + getPolarity().sym + "" + getDiscreteSize();
+		return String.valueOf(getOrbit()) + getCardinalDirection() + getDiscreteSize() + getPolarity().sym;
 	}
 	
-	//setters
-	public void setDiscreteSize(DiscreteSize discrete_size) {
-		this.discrete_size = discrete_size;
-	}
 	public void setOrbit(int orbit) {
 		this.orbit = orbit;
+		setMarkerChanged();
 	}
+	
+	public int getOrbit() {
+		return orbit;
+	}
+	
 	public void setDirection(CardinalDirection direction) {
 		this.direction = direction;
+		setMarkerChanged();
 	}
+	
+	public CardinalDirection getCardinalDirection() {
+		return direction;
+	}
+	
 	public void setPolarity(Polarity polarity) {
 		this.polarity = polarity;
+		setMarkerChanged();
 	}
+
+	public Polarity getPolarity() {
+		return polarity;
+	}
+
+	public void setDiscreteSize(DiscreteSize discrete_size) {
+		this.discrete_size = discrete_size;
+		setMarkerChanged();
+	}
+	
+	public DiscreteSize getDiscreteSize() {
+		return discrete_size;
+	}
+
 	void setParent(CircleTag parent) {
 		this.parent = parent;
 	}
 	
-	//getters
-	public DiscreteSize getDiscreteSize() {
-		return discrete_size;
-	}
-	public int getOrbit() {
-		return orbit;
-	}
-	public CardinalDirection getCardinalDirection() {
-		return direction;
-	}
-	public Polarity getPolarity() {
-		return polarity;
-	}
 	public CircleTag getParent(CircleTag parent) {
 		return parent;
 	}
 	
-	//drawing function
+	void setMarkerChanged() {
+		isMarkerChanged = true;
+		if(parent != null) parent.setTagChanged();
+	}
+	
 	public void drawCircleMark(Graphics2D g2d) {
 		switch (polarity) {
 		case HOLLOW:
@@ -71,37 +87,47 @@ public class CircleMark {
 		}
 	}
 	
-	//value
-	public void updateValue() {
-		value = polarity.value * discrete_size.base_value * orbit;
-	}
-	public int getBaseValue() {
-		return discrete_size.base_value;
-	}
-	public int getValue() {
-		updateValue();
-		return value;
-	}
-	
-	//geometry
 	public int getX() {
 		return (parent.getTagSize()/2) + Math.round((int)(Math.cos(getCardinalDirection().rad) * getDisplacement()));
 	}
+	
 	public int getY() {
 		return (parent.getTagSize()/2) + Math.round((int)(Math.sin(getCardinalDirection().rad) * getDisplacement()));
 	}
+	
 	public int getRadius() {
 		return Math.round(getDiameter() / 2f);
 	}
+	
 	public int getDiameter() {
 		return Math.round((getDiscreteSize().size * parent.getScale()));
 	}
+	
 	public int getDisplacement() {
-		return Math.round(parent.getBodySize() / (parent.getOrbits() * 2f) * getOrbit());
+		return Math.round(parent.getBodySize() / (CircleTag.ORBITS * 2f) * getOrbit());
 	}
+	
 	public Point getPoint() {
 		return new Point(getX(), getY());
 	}
+
+	public int calculateValue() {
+		return getOrbit() * getBaseValue() * getPolarity().value;
+	}
+	
+	public int getBaseValue() {
+		return discrete_size.base_value;
+	}
+	
+	public int getValue() {
+		if(isMarkerChanged) {
+			value = calculateValue();
+			isMarkerChanged = false;
+		}
+		
+		return value;
+	}
+
 	boolean intersects(CircleMark circle_mark) {
 	    int dx = getX() - circle_mark.getX();
 	    int dy = getY() - circle_mark.getY();
@@ -109,10 +135,13 @@ public class CircleMark {
 	    
 	    return distance <= ((getRadius() + circle_mark.getRadius()));
 	}
-	boolean isInsideCircleTag(double tag_size) {
+	
+	boolean isInsideCircleTag() {
+		if(parent == null) return false;
+		
 	    return 
-	    	(((this.getX() - getRadius()) >= 1) && ((this.getX() + getRadius()) <= (tag_size-2)))
+	    	(((this.getX() - getRadius()) >= 1) && ((this.getX() + getRadius()) <= (parent.getTagSize()-2)))
 	    	&&
-	    	(((this.getY() - getRadius()) >= 1) && ((this.getY() + getRadius()) <= (tag_size-2)));
-	 }	
+	    	(((this.getY() - getRadius()) >= 1) && ((this.getY() + getRadius()) <= (parent.getTagSize()-2)));
+	 }
 }

@@ -5,9 +5,11 @@ public enum Polarity {
 	
 	public final char sym;
 	public final int value;
+	
 	Polarity(char sym) {
 		this.sym = sym;
-		value = Integer.parseInt(sym+"1");
+		
+		value = Integer.parseInt(sym + "1");
 	}
 	
 }
